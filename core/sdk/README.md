@@ -74,6 +74,11 @@ Use disposable replica data with `--fresh`. Environment credentials override the
 flag, and recovered credentials are not replaced. The sample expects `iggy`/`iggy`
 and requires `iggy`, Tokio and `futures-util` in the application.
 
+`reconnection_retries=0` bounds `connect()` to a single attempt. The default is
+`unlimited`, so without it the sample keeps retrying in the background when the
+server was never started and never returns an error. Keep the default for a
+long-running service and the bounded value while trying the SDK out.
+
 ```rust
 use std::error::Error;
 use std::str::FromStr;
@@ -87,7 +92,7 @@ const CONSUMER_GROUP: &str = "telemetry-ingester";
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     let client = IggyClient::from_connection_string(
-        "iggy://iggy:iggy@localhost:8090",
+        "iggy://iggy:iggy@localhost:8090?reconnection_retries=0",
     )?;
     client.connect().await?;
 

@@ -179,6 +179,13 @@ asyncio.run(main())
 transport. `examples/python/getting-started/producer.py` shows each swap in
 context.
 
+Pass `reconnection_retries=0` on the connection string (or set
+`TcpReconnectionConfig(enabled=False, ...)`) to bound `connect()` to a single
+attempt. The default reconnects forever, so a sample run against a server that
+was never started hangs silently instead of returning an error. Keep the
+default for a long-running service, and use the bounded value while trying the
+SDK out.
+
 `HttpConfig` differs from TCP in two ways. There is no reconnection policy and no
 `AutoLogin`: `connect()` does not dial over HTTP, but it does start the
 heartbeat that `heartbeat_interval` configures, so call it and then
@@ -232,7 +239,7 @@ from apache_iggy import DirectProducerConfig, IggyClient, Partitioning, SendMess
 
 
 async def main():
-    client = IggyClient.from_connection_string("iggy+tcp://iggy:iggy@127.0.0.1:8090")
+    client = IggyClient.from_connection_string("iggy+tcp://iggy:iggy@127.0.0.1:8090?reconnection_retries=0")
     await client.connect()
 
     producer = await client.producer(
