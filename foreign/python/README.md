@@ -181,10 +181,10 @@ context.
 
 Pass `reconnection_retries=0` on the connection string (or set
 `TcpReconnectionConfig(enabled=False, ...)`) to bound `connect()` to a single
-attempt. The default reconnects forever, so a sample run against a server that
-was never started hangs silently instead of returning an error. Keep the
-default for a long-running service, and use the bounded value while trying the
-SDK out.
+pass over the configured endpoints. The default reconnects forever, so a
+sample run against a server that was never started hangs silently instead of
+returning an error. Keep the default for a long-running service, and use the
+bounded value while trying the SDK out.
 
 `HttpConfig` differs from TCP in two ways. There is no reconnection policy and no
 `AutoLogin`: `connect()` does not dial over HTTP, but it does start the
